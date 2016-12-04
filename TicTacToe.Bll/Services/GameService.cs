@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TicTacToe.Bll.BusinessModel;
 using TicTacToe.Bll.Dto;
 using TicTacToe.Bll.Infrastructure;
 using TicTacToe.Bll.Interfaces;
@@ -34,7 +35,7 @@ namespace TicTacToe.Bll.Services
             {
                 for (var y = 0; y < state.GetLength(1); y++)
                 {
-                    if (!string.IsNullOrEmpty(state[x, y]))
+                    if (state[x, y].HasValue)
                     {
                         continue;
                     }
@@ -90,6 +91,7 @@ namespace TicTacToe.Bll.Services
 
             if (game.Id > 0)
             {
+                game.IsFinished = new GameResultChecker().DoesGameFinished(getGameState(game));
                 _database.Games.Update(game);
             }
             else
@@ -98,6 +100,7 @@ namespace TicTacToe.Bll.Services
             }
 
             _database.Save();
+
             return convertGameEntityToDto(game);
         }
 
@@ -122,14 +125,14 @@ namespace TicTacToe.Bll.Services
             };
         }
 
-        private static string[,] getGameState(Game game)
+        private static int?[,] getGameState(Game game)
         {
-            var gameState = new string[GameCapacity, GameCapacity];
+            var gameState = new int?[GameCapacity, GameCapacity];
             var turns = game.Game2Players.OrderByDescending(g2P => g2P.Date).ToArray();
-            for (var i = 0; i < turns.Length; i++)
+            var firstPlayerId = turns.First().PlayerId;
+            foreach (var turn in turns)
             {
-                var symbol = (i + 1) % 2 == 0 ? "X" : "0";
-                var turn = turns[i];
+                var symbol = turn.PlayerId == firstPlayerId ? 1 : 0;
                 gameState[turn.X, turn.Y] = symbol;
             }
 
