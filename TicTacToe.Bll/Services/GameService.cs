@@ -27,27 +27,7 @@ namespace TicTacToe.Bll.Services
             var game = getGame(id);
             validateGame(game);
 
-            var aiTurn = new TurnDto
-            {
-                GameId = id
-            };
-            
-            var state = getGameState(game);
-            for (var x = 0; x < state.GetLength(0); x++)
-            {
-                for (var y = 0; y < state.GetLength(1); y++)
-                {
-                    if (state[x, y].HasValue)
-                    {
-                        continue;
-                    }
-
-                    aiTurn.X = x;
-                    aiTurn.Y = y;
-                    break;
-                }
-            }
-
+            var aiTurn = getAiTurn(game);
             return makeTurn(aiTurn, game);
         }
 
@@ -127,14 +107,14 @@ namespace TicTacToe.Bll.Services
             };
         }
 
-        private static int?[,] getGameState(Game game)
+        private static byte[,] getGameState(Game game)
         {
-            var gameState = new int?[GameCapacity, GameCapacity];
-            var turns = game.Game2Players.OrderByDescending(g2P => g2P.Date).ToArray();
+            var gameState = new byte[GameCapacity, GameCapacity];
+            var turns = game.Game2Players.OrderBy(g2P => g2P.Date).ToArray();
             var firstPlayerId = turns.First().PlayerId;
             foreach (var turn in turns)
             {
-                var symbol = turn.PlayerId == firstPlayerId ? 1 : 0;
+                var symbol = Convert.ToByte(turn.PlayerId == firstPlayerId ? 2 : 1);
                 gameState[turn.X, turn.Y] = symbol;
             }
 
@@ -151,6 +131,32 @@ namespace TicTacToe.Bll.Services
             var winner = game.Game2Players.OrderByDescending(g2P => g2P.Date).First().Player;
             throw new ValidationException(
                 string.Format("Game has been already finished. '{0}' player has won.", winner.Name), string.Empty);
+        }
+
+        private static TurnDto getAiTurn(Game game)
+        {
+            var res = new TurnDto
+            {
+                GameId = game.Id
+            };
+
+            var state = getGameState(game);
+            for (var x = 0; x < state.GetLength(0); x++)
+            {
+                for (var y = 0; y < state.GetLength(1); y++)
+                {
+                    if (state[x, y] > 0)
+                    {
+                        continue;
+                    }
+
+                    res.X = x;
+                    res.Y = y;
+                    return res;
+                }
+            }
+
+            return res;
         }
     }
 }

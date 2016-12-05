@@ -4,11 +4,11 @@
     {
         public GameDto(int capacity)
         {
-            State = new int?[capacity, capacity];
+            State = new byte[capacity, capacity];
         }
 
         public int Id { get; set; }
         public bool IsFinished { get; set; }
-        public int?[,] State { get; set; }
+        public byte[,] State { get; set; }
     }
 }

@@ -1,26 +1,23 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace TicTacToe.Bll.BusinessModel
+﻿namespace TicTacToe.Bll.BusinessModel
 {
     public class GameResultChecker
     {
         private int _gameCapacity;
 
-        public bool DoesGameFinished(int?[,] matrix)
+        public bool DoesGameFinished(byte[,] matrix)
         {
             _gameCapacity = matrix.GetLength(0);
             for (var i = 0; i < _gameCapacity; i++)
             {
-                var row = new List<int>();
-                var column = new List<int>();
+                var rowSum = 0;
+                var columnSum = 0;
                 for (var j = _gameCapacity; j > 0; j--)
                 {
-                    row.Add(getMatrixValue(matrix[i, _gameCapacity - j]));
-                    column.Add(getMatrixValue(matrix[_gameCapacity - j, i]));
+                    rowSum += matrix[i, _gameCapacity - j];
+                    columnSum += matrix[_gameCapacity - j, i];
                 }
 
-                if (!checkLine(row) && !checkLine(column))
+                if (!checkLine(rowSum) && !checkLine(columnSum))
                 {
                     continue;
                 }
@@ -28,30 +25,24 @@ namespace TicTacToe.Bll.BusinessModel
                 return true;
             }
 
-            var diag1 = new List<int>();
+            var diag1Sum = 0;
             for (var i = 0; i < _gameCapacity; i++)
             {
-                diag1.Add(getMatrixValue(matrix[i, i]));
+                diag1Sum += matrix[i, i];
             }
 
-            var diag2 = new List<int>();
+            var diag2Sum = 0;
             for (var i = 0; i < _gameCapacity; i++)
             {
-                diag2.Add(getMatrixValue(matrix[i, _gameCapacity - 1 - i]));
+                diag2Sum += matrix[i, _gameCapacity - 1 - i];
             }
 
-            return checkLine(diag1) || checkLine(diag2);
+            return checkLine(diag1Sum) || checkLine(diag2Sum);
         }
 
-        private static int getMatrixValue(int? value)
+        private bool checkLine(int lineSum)
         {
-            return value ?? -1;
-        }
-
-        private bool checkLine(IEnumerable<int> line)
-        {
-            var sum = line.Sum();
-            return sum == _gameCapacity || sum == 0;
+            return lineSum == _gameCapacity || lineSum == _gameCapacity*2;
         }
     }
 }
