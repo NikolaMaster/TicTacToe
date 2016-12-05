@@ -80,7 +80,13 @@ namespace TicTacToe.Bll.Services
 
             if (game.Id > 0)
             {
-                game.IsFinished = _gameResultChecker.DoesGameFinished(getGameState(game));
+                var gameState = getGameState(game);
+                if (gameState[turnDto.X, turnDto.Y] != 0)
+                {
+                    throw new CustomValidationException("Requested cell already contains value", string.Empty);
+                }
+
+                game.IsFinished = _gameResultChecker.DoesGameFinished(gameState);
                 _database.Games.Update(game);
             }
             else
@@ -157,7 +163,7 @@ namespace TicTacToe.Bll.Services
             {
                 for (var y = 0; y < state.GetLength(1); y++)
                 {
-                    if (state[x, y] > 0)
+                    if (state[x, y] != 0)
                     {
                         continue;
                     }
