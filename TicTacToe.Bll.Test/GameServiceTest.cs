@@ -72,5 +72,6 @@ namespace TicTacToe.Bll.Test
             Assert.AreEqual(result.State[1, 1], 1);
             Assert.AreEqual(result.State[2, 2], 1);
         }
+
     }
 }

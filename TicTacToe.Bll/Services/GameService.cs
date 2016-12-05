@@ -12,12 +12,14 @@ namespace TicTacToe.Bll.Services
 {
     public class GameService : IGameService
     {
-        private IUnitOfWork _database { get; }
+        private readonly IUnitOfWork _database;
         private const int GameCapacity = 3;
+        private readonly GameResultChecker _gameResultChecker;
 
         public GameService(IUnitOfWork uow)
         {
             _database = uow;
+            _gameResultChecker = new GameResultChecker();
         }
 
         public GameDto MakeAiTurn(int id)
@@ -91,7 +93,7 @@ namespace TicTacToe.Bll.Services
 
             if (game.Id > 0)
             {
-                game.IsFinished = new GameResultChecker().DoesGameFinished(getGameState(game));
+                game.IsFinished = _gameResultChecker.DoesGameFinished(getGameState(game));
                 _database.Games.Update(game);
             }
             else
