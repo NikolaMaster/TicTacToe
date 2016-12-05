@@ -33,7 +33,9 @@ namespace TicTacToe.Bll.Services
 
         public GameDto MakeTurn(TurnDto turnDto)
         {
-            var game = turnDto.GameId.HasValue ? _database.Games.Get(turnDto.GameId.Value) : new Game();
+            var game = turnDto.GameId.HasValue && turnDto.GameId.Value > 0
+                ? _database.Games.Get(turnDto.GameId.Value)
+                : new Game();
             validateGame(game);
             return makeTurn(turnDto, game);
         }
