@@ -20,11 +20,14 @@ namespace TicTacToe.Bll.Services
             {
                 Name = playerDto.Name
             });
+
+            _database.Save();
         }
 
         public void DeletePlayer(int id)
         {
             _database.Players.Delete(id);
+            _database.Save();
         }
     }
 }

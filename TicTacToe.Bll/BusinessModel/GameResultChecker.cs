@@ -7,6 +7,8 @@
         public bool DoesGameFinished(byte[,] matrix)
         {
             _gameCapacity = matrix.GetLength(0);
+            var diag1Sum = 0;
+            var diag2Sum = 0;
             for (var i = 0; i < _gameCapacity; i++)
             {
                 var rowSum = 0;
@@ -17,24 +19,15 @@
                     columnSum += matrix[_gameCapacity - j, i];
                 }
 
+                diag1Sum += matrix[i, i];
+                diag2Sum += matrix[i, _gameCapacity - 1 - i];
+
                 if (!checkLine(rowSum) && !checkLine(columnSum))
                 {
                     continue;
                 }
 
                 return true;
-            }
-
-            var diag1Sum = 0;
-            for (var i = 0; i < _gameCapacity; i++)
-            {
-                diag1Sum += matrix[i, i];
-            }
-
-            var diag2Sum = 0;
-            for (var i = 0; i < _gameCapacity; i++)
-            {
-                diag2Sum += matrix[i, _gameCapacity - 1 - i];
             }
 
             return checkLine(diag1Sum) || checkLine(diag2Sum);
