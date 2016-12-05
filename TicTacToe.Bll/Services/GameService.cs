@@ -71,6 +71,12 @@ namespace TicTacToe.Bll.Services
 
         private GameDto makeTurn(TurnDto turnDto, Game game)
         {
+            var gameState = getGameState(game);
+            if (gameState[turnDto.X, turnDto.Y] != 0)
+            {
+                throw new CustomValidationException("Requested cell already contains value", string.Empty);
+            }
+
             game.Game2Players.Add(new Game2Player
             {
                 Date = DateTime.Now,
@@ -82,13 +88,7 @@ namespace TicTacToe.Bll.Services
 
             if (game.Id > 0)
             {
-                var gameState = getGameState(game);
-                if (gameState[turnDto.X, turnDto.Y] != 0)
-                {
-                    throw new CustomValidationException("Requested cell already contains value", string.Empty);
-                }
-
-                game.IsFinished = _gameResultChecker.DoesGameFinished(gameState);
+                game.IsFinished = _gameResultChecker.DoesGameFinished(getGameState(game));
                 _database.Games.Update(game);
             }
             else
