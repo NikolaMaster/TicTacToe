@@ -1,4 +1,7 @@
-﻿using TicTacToe.Bll.Dto;
+﻿using System.Collections.Generic;
+using System.Linq;
+using TicTacToe.Bll.Dto;
+using TicTacToe.Bll.Infrastructure;
 using TicTacToe.Bll.Interfaces;
 using TicTacToe.Dal.Entities;
 using TicTacToe.Dal.Interfaces;
@@ -14,20 +17,49 @@ namespace TicTacToe.Bll.Services
             _database = uow;
         }
 
-        public void CreatePlayer(PlayerDto playerDto)
+        public IEnumerable<PlayerDto> GetAll()
         {
-            _database.Players.Create(new Player
-            {
-                Name = playerDto.Name
-            });
-
-            _database.Save();
+            return _database.Players.GetAll().Select(convertToDto);
         }
 
-        public void DeletePlayer(int id)
+        public PlayerDto CreatePlayer(PlayerDto playerDto)
         {
+            var playerDb = _database.Players.Find(p => string.Equals(p.Name, playerDto.Name)).FirstOrDefault();
+            if (playerDb != null)
+            {
+                throw new CustomValidationException("Player with such name is already exists", "Name");
+            }
+
+            var player = new Player
+            {
+                Name = playerDto.Name
+            };
+
+            _database.Players.Create(player);
+            _database.Save();
+            return convertToDto(player);
+        }
+
+        public PlayerDto DeletePlayer(int id)
+        {
+            var deletedPlayer = _database.Players.Get(id);            
+            if (deletedPlayer == null)
+            {
+                return null;
+            }
+
             _database.Players.Delete(id);
             _database.Save();
+            return convertToDto(deletedPlayer);
+        }
+
+        private static PlayerDto convertToDto(Player player)
+        {
+            return new PlayerDto
+            {
+                Id = player.Id,
+                Name = player.Name
+            };
         }
     }
 }

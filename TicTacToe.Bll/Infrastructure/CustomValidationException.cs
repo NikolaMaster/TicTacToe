@@ -2,11 +2,11 @@
 
 namespace TicTacToe.Bll.Infrastructure
 {
-    public class ValidationException : Exception
+    public class CustomValidationException : Exception
     {
         public string Property { get; protected set; }
 
-        public ValidationException(string message, string prop) : base(message)
+        public CustomValidationException(string message, string prop) : base(message)
         {
             Property = prop;
         }

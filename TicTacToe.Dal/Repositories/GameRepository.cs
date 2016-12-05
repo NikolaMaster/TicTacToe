@@ -26,7 +26,7 @@ namespace TicTacToe.Dal.Repositories
 
         public Game Get(int id)
         {
-            return _db.Games.Find(id);
+            return Find(g => g.Id == id).FirstOrDefault();
         }
 
         public IEnumerable<Game> Find(Expression<Func<Game, bool>> expression)

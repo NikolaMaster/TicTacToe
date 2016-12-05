@@ -1,10 +1,12 @@
-﻿using TicTacToe.Bll.Dto;
+﻿using System.Collections.Generic;
+using TicTacToe.Bll.Dto;
 
 namespace TicTacToe.Bll.Interfaces
 {
     public interface IPlayerService
     {
-        void CreatePlayer(PlayerDto playerDto);
-        void DeletePlayer(int id);
+        IEnumerable<PlayerDto> GetAll();
+        PlayerDto CreatePlayer(PlayerDto playerDto);
+        PlayerDto DeletePlayer(int id);
     }
 }

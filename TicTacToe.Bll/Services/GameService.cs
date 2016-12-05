@@ -41,18 +41,25 @@ namespace TicTacToe.Bll.Services
         public GameDto GetGame(int id)
         {
             var game = getGame(id);
-            return convertGameEntityToDto(game);
+            return convertToDto(game);
         }
 
         public IEnumerable<GameDto> GetGames()
         {
-            return _database.Games.GetAll().Select(convertGameEntityToDto);
+            return _database.Games.GetAll().Select(convertToDto);
         }
 
-        public void DeleteGame(int id)
+        public GameDto DeleteGame(int id)
         {
+            var game = _database.Games.Get(id);
+            if (game == null)
+            {
+                return null;
+            }
+
             _database.Games.Delete(id);
             _database.Save();
+            return convertToDto(game);
         }
 
         public void Dispose()
@@ -83,7 +90,7 @@ namespace TicTacToe.Bll.Services
 
             _database.Save();
 
-            return convertGameEntityToDto(game);
+            return convertToDto(game);
         }
 
         private Game getGame(int id)
@@ -91,13 +98,13 @@ namespace TicTacToe.Bll.Services
             var game = _database.Games.Get(id);
             if (game == null)
             {
-                throw new ValidationException("Game was not found", string.Empty);
+                throw new CustomValidationException("Game was not found", string.Empty);
             }
 
             return game;
         }
 
-        private static GameDto convertGameEntityToDto(Game game)
+        private static GameDto convertToDto(Game game)
         {
             return new GameDto(GameCapacity)
             {
@@ -129,7 +136,7 @@ namespace TicTacToe.Bll.Services
             }
 
             var winner = game.Game2Players.OrderByDescending(g2P => g2P.Date).First().Player;
-            throw new ValidationException(
+            throw new CustomValidationException(
                 string.Format("Game has been already finished. '{0}' player has won.", winner.Name), string.Empty);
         }
 

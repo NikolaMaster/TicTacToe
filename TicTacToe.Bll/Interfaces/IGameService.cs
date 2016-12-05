@@ -9,7 +9,7 @@ namespace TicTacToe.Bll.Interfaces
         GameDto MakeTurn(TurnDto turnDto);
         GameDto GetGame(int id);
         IEnumerable<GameDto> GetGames();
-        void DeleteGame(int id);
+        GameDto DeleteGame(int id);
         void Dispose();
     }
 }
