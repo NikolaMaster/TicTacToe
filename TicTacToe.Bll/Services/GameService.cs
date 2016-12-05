@@ -114,14 +114,19 @@ namespace TicTacToe.Bll.Services
             };
         }
 
-        private static byte[,] getGameState(Game game)
+        private static sbyte[,] getGameState(Game game)
         {
-            var gameState = new byte[GameCapacity, GameCapacity];
+            var gameState = new sbyte[GameCapacity, GameCapacity];
             var turns = game.Game2Players.OrderBy(g2P => g2P.Date).ToArray();
+            if (!turns.Any())
+            {
+                return gameState;
+            }
+
             var firstPlayerId = turns.First().PlayerId;
             foreach (var turn in turns)
             {
-                var symbol = Convert.ToByte(turn.PlayerId == firstPlayerId ? 2 : 1);
+                var symbol = Convert.ToSByte(turn.PlayerId == firstPlayerId ? 1 : -1);
                 gameState[turn.X, turn.Y] = symbol;
             }
 

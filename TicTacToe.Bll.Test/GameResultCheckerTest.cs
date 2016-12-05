@@ -11,11 +11,11 @@ namespace TicTacToe.Bll.Test
         {
             var checker = new GameResultChecker();
 
-            var field = new byte[,]
+            var field = new sbyte[,]
             {
-                { 0, 1, 1 },
-                { 1, 0, 1 },
-                { 1, 1, 0 }
+                {  0, -1, -1 },
+                { -1,  0, -1 },
+                { -1, -1,  0 }
             };
 
             var result = checker.DoesGameFinished(field);
@@ -28,11 +28,11 @@ namespace TicTacToe.Bll.Test
         {
             var checker = new GameResultChecker();
 
-            var field = new byte[,]
+            var field = new sbyte[,]
             {
-                { 2,1,1 },
-                { 1,2,1 },
-                { 1,1,2 }
+                { 1,-1,-1 },
+                { -1,1,-1 },
+                { -1,-1,1 }
             };
 
             var result = checker.DoesGameFinished(field);
@@ -45,11 +45,11 @@ namespace TicTacToe.Bll.Test
         {
             var checker = new GameResultChecker();
 
-            var field = new byte[,]
+            var field = new sbyte[,]
             {
-                { 1,1,2 },
-                { 1,2,1 },
-                { 2,1,1 }
+                { -1,-1,1 },
+                { -1,1,-1 },
+                { 1,-1,-1 }
             };
 
             var result = checker.DoesGameFinished(field);
@@ -63,11 +63,11 @@ namespace TicTacToe.Bll.Test
         {
             var checker = new GameResultChecker();
 
-            var field = new byte[,]
+            var field = new sbyte[,]
             {
-                { 2,2,2 },
-                { 1,1,1 },
-                { 2,0,0 }
+                { 1,  1,  1},
+                {-1, -1, -1},
+                { 1,  0,  0}
             };
 
             var result = checker.DoesGameFinished(field);
@@ -80,16 +80,33 @@ namespace TicTacToe.Bll.Test
         {
             var checker = new GameResultChecker();
 
-            var field = new byte[,]
+            var field = new sbyte[,]
             {
-                { 2,1,2 },
-                { 2,1,1 },
-                { 2,1,1 }
+                { 1,-1, 1 },
+                { 1,-1,-1 },
+                { 1,-1,-1 }
             };
 
             var result = checker.DoesGameFinished(field);
 
             Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void TestDoGameNotFinished()
+        {
+            var checker = new GameResultChecker();
+
+            var field = new sbyte[,]
+            {
+                { 1, 0, 1 },
+                { 0, 0, -1 },
+                { 1, 0, -1 }
+            };
+
+            var result = checker.DoesGameFinished(field);
+
+            Assert.IsFalse(result);
         }
     }
 }

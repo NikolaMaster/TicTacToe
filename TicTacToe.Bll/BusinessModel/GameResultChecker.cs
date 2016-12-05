@@ -4,7 +4,7 @@
     {
         private int _gameCapacity;
 
-        public bool DoesGameFinished(byte[,] matrix)
+        public bool DoesGameFinished(sbyte[,] matrix)
         {
             _gameCapacity = matrix.GetLength(0);
             var diag1Sum = 0;
@@ -35,7 +35,7 @@
 
         private bool checkLine(int lineSum)
         {
-            return lineSum == _gameCapacity || lineSum == _gameCapacity*2;
+            return lineSum == _gameCapacity || lineSum == _gameCapacity*(-1);
         }
     }
 }
