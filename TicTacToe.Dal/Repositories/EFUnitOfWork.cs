@@ -11,6 +11,11 @@ namespace TicTacToe.Dal.Repositories
         private PlayerRepository _playerRepository;
         private IRepository<Game> _gameRepository;
 
+        ~EfUnitOfWork()
+        {
+            Dispose(false);
+        }
+
         public EfUnitOfWork(string connectionString)
         {
             _db = new TicTacToeContext(connectionString);

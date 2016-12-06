@@ -92,5 +92,11 @@ namespace TicTacToe.Web.Controllers
 
             return Ok(res);
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            _gameService.Dispose();
+            base.Dispose(disposing);
+        }
     }
 }

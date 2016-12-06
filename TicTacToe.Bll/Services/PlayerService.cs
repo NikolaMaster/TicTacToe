@@ -53,6 +53,11 @@ namespace TicTacToe.Bll.Services
             return convertToDto(deletedPlayer);
         }
 
+        public void Dispose()
+        {
+            _database.Dispose();
+        }
+
         private static PlayerDto convertToDto(Player player)
         {
             return new PlayerDto

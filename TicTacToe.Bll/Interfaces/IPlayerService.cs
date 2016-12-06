@@ -8,5 +8,6 @@ namespace TicTacToe.Bll.Interfaces
         IEnumerable<PlayerDto> GetAll();
         PlayerDto CreatePlayer(PlayerDto playerDto);
         PlayerDto DeletePlayer(int id);
+        void Dispose();
     }
 }
