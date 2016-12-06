@@ -8,8 +8,10 @@ namespace TicTacToe.Web.Model
         [Required]
         public int? PlayerId { get; set; }
         [Required]
+        [Range(0, 2)]
         public int? X { get; set; }
         [Required]
+        [Range(0, 2)]
         public int? Y { get; set; }
     }
 }
